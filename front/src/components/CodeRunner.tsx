@@ -2,6 +2,46 @@ import { useState } from 'react';
 import { useCodeExecutor } from '@/hooks/useCodeExecutor';
 import { FiPlay, FiHelpCircle, FiCopy } from 'react-icons/fi';
 
+import Editor from 'react-simple-code-editor';
+import { highlight } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css'; //Example style, you can use another
+
+let projfLang = {
+  'boolean': /\b(?:false|true)\b/,
+	'null': {
+		pattern: /\bnull\b/,
+		alias: 'keyword'
+	},
+  'number': /-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b/i,
+  'comment': {
+		pattern: /\#.*/,
+		greedy: true
+	},
+  'builtin': {
+		pattern: /(setq)|(while)|(cond)|(func)|(lambda)/,
+		greedy: true
+	}
+}
+
+function FancyEditor(props: {code: string, setCode: (arg0: string) => any}) {
+   return (
+     <div style={{border: "solid 1px"}}>
+      <Editor
+        value={props.code}
+        onValueChange={code => props.setCode(code)}
+        highlight={code => highlight(code, projfLang)}
+        padding={10}
+        style={{
+          fontFamily: '"Fira code", "Fira Mono", monospace',
+          fontSize: "1em",
+        }}
+      />
+     </div>
+  );
+}
+
 export const CodeRunner = () => {
   const [code, setCode] = useState('');
   const [showHelp, setShowHelp] = useState(false);
@@ -24,7 +64,7 @@ export const CodeRunner = () => {
     },
     {
       name: 'Conditional',
-      code: '(cond (less x 0) (minus 0 x) x)'
+      code: '(setq x -5)\n(cond (less x 0) (minus 0 x) x)'
     },
     {
       name: 'Function',
@@ -32,7 +72,7 @@ export const CodeRunner = () => {
     },
     {
       name: 'List',
-      code: '(cons 1 (cons 2 null))'
+      code: '(cons 1 (cons 2 \'()))'
     }
   ];
 
@@ -68,13 +108,7 @@ export const CodeRunner = () => {
             </div>
 
             <div className="relative">
-              <textarea
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Enter your F language code here..."
-                className="w-full h-96 p-4 font-mono text-gray-800 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                disabled={isLoading}
-              />
+              <FancyEditor code={code} setCode={c => setCode(c) }/>
               <button
                 onClick={handleRun}
                 disabled={isLoading || !code.trim()}
