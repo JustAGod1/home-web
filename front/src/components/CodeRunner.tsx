@@ -21,7 +21,7 @@ let projfLang = {
 		greedy: true
 	},
   'builtin': {
-		pattern: /(setq)|(while)|(cond)|(func)|(lambda)/,
+		pattern: /(setq)|(while)|(cond)|(func)|(lambda)|(lambda)|(quote)|(return)|(break)|(prog)|\'|`/,
 		greedy: true
 	}
 }
@@ -74,7 +74,27 @@ export const CodeRunner = () => {
     {
       name: 'List',
       code: '(cons 1 (cons 2 \'()))'
-    }
+    },
+    {
+      name: 'Return',
+      code: '(func r ()\n  (prog () (\n   (return \'ok)\n   \'fail\n  )\n )\n)\n\n(r)'
+    },
+    {
+      name: 'Break',
+      code: '(setq i 0)\n(while true \n  (prog () (\n      (cond (greater i 2) (break))\n      (setq i (plus i 1))\n    )\n  )\n)\ni'
+    },
+    {
+      name: 'Fibonachi',
+      code: '(func fib (N)\n    (cond (lesseq N 2)\n        1\n        (plus (fib (minus N 1)) (fib (minus N 2)))\n    )\n)\n\n(fib 10) # 55'
+    },
+    {
+      name: 'Emoji',
+      code: '(setq 🤯 5)\n(setq 🤖 7)\n(times 🤖 🤯)'
+    },
+    {
+      name: 'Error',
+      code: '(func fib (N)\n    (cond (lesseqq N 2)\n        1\n        (plus (fib (minus N 1)) (fib (minus N 2)))\n    )\n)\n\n(fib 10) # 55'
+    },
   ];
 
   const loadExample = (exampleCode: string) => {
