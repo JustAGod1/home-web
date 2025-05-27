@@ -56,4 +56,4 @@ ENV EXECUTABLE_PATH=/path/to/your/executable
 EXPOSE 8080
 
 # Run the server
-CMD ["./server"]
+CMD ["/app/server"]
