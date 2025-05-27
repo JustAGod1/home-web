@@ -6,16 +6,16 @@ services:
     build: .
     environment:
       - PORT=8080
-      - EXECUTABLE_PATH=/app/projfs
+      - EXECUTABLE_PATH=/data/projfs
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`yourdomain.com`)"
+      - "traefik.http.routers.app.rule=Host(`projf.justagod.ru`)"
       - "traefik.http.routers.app.entrypoints=websecure"
       - "traefik.http.routers.app.tls.certresolver=myresolver"
       - "traefik.http.services.app.loadbalancer.server.port=8080"
       - "traefik.docker.network=traefik_public"
     volumes:
-      - "./data/app:/app"
+      - "./data/app:/data"
     # Uncomment if you need to expose ports for local testing
     # ports:
     #   - "8080:8080"
@@ -29,7 +29,7 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+      - "--certificatesresolvers.myresolver.acme.email=hvalick2111@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"

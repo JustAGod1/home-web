@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go application
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o server cmd/home-web/main.go  
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /app/server cmd/home-web/main.go  
 
 # Stage 2: Build the Vite frontend
 FROM node:18-alpine AS vite-builder
@@ -42,7 +42,9 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates tzdata
 
 # Copy Go binary from builder
-COPY --from=go-builder /app/server ./server
+COPY --from=go-builder /app/server /app/server
+
+RUN ls -Al /app/server
 
 # Copy static files from vite builder
 COPY --from=vite-builder /app/dist ./static
