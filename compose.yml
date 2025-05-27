@@ -1,12 +1,41 @@
 version: '3.8'
 
 services:
+  # Your Go backend + frontend service
   app:
     build: .
-    ports:
-      - "8080:8080"
     environment:
       - PORT=8080
-      - EXECUTABLE_PATH=/app/your-executable
+      - EXECUTABLE_PATH=/app/projfs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`yourdomain.com`)"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls.certresolver=myresolver"
+      - "traefik.http.services.app.loadbalancer.server.port=8080"
+      - "traefik.docker.network=traefik_public"
     volumes:
-      - ./:/app
+      - "./data/app:/app"
+    # Uncomment if you need to expose ports for local testing
+    # ports:
+    #   - "8080:8080"
+
+  # Traefik reverse proxy with Let's Encrypt
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./data/letsencrypt:/letsencrypt"
+    restart: unless-stopped
+
