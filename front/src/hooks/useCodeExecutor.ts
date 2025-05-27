@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { api } from '@/api/client'
-import type { ExecutionResponse, ApiClient } from '@/api/types'
+import { api } from '../api/client'
+import type { ExecutionResponse } from '../api/types'
 
 export const useCodeExecutor = (): [
   (code: string) => Promise<void>,

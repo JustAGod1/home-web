@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useCodeExecutor } from '@/hooks/useCodeExecutor';
+import { useCodeExecutor } from '../hooks/useCodeExecutor';
 import { FiPlay, FiHelpCircle, FiCopy } from 'react-icons/fi';
 
 import Editor from 'react-simple-code-editor';
+// @ts-ignore
 import { highlight } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';

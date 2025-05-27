@@ -1,4 +1,4 @@
-import { CodeRunner } from '@/components/CodeRunner'
+import { CodeRunner } from './components/CodeRunner'
 
 function App() {
   return (
